@@ -168,7 +168,7 @@
 
 		var isTestFile = function(s)
 		{
-			return utils.containsAnyOfTheStrings(s, ["/test/", "/__test__/", "/unit/", ".snap", ".spec"]);
+			return utils.containsAnyOfTheStrings(s, ["/test/", "/__test__/", "/unit/", "/demos/", ".snap", ".spec"]);
 		};
 
 		var clickButton = function(button)
@@ -207,6 +207,43 @@
 			}
 		};
 
+		const approvePullRequest = function ()
+		{
+			const openReviewPanel = function ()
+			{
+				const elem = getOne(".js-reviews-toggle");
+				if (elem)
+					elem.click();
+			};
+
+			const clickApproveCheckbox = function ()
+			{
+				const e = get(".form-checkbox input");
+				let i = e.length;
+				while (i--)
+				{
+					const checkbox = e[i];
+					if (checkbox.value === "approve")
+					{
+						checkbox.setAttribute("checked", "checked");
+						checkbox.click();
+						break;
+					}
+				}
+			};
+
+			const clickSubmitReview = function ()
+			{
+				const e = getOne(".pull-request-review-menu .btn-primary");
+				if (e)
+					e.click();
+			};
+
+			openReviewPanel();
+			setTimeout(clickApproveCheckbox, 100);
+			setTimeout(clickSubmitReview, 500);
+		};
+
 		var main = function()
 		{
 			var style = '.sticky-content, .js-sticky h1, .js-sticky h2 { display: none; }' +
@@ -221,6 +258,7 @@
 			addButton({ buttonText: "Toggle logic files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.LOGIC_FILE ); } });
 			addButton({ buttonText: "Toggle test files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEST_FILE ); } });
 			addButton({ buttonText: "Toggle template files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEMPLATE_FILE ); } });
+			addButton({ buttonText: "Approve pull request", clickHandler: approvePullRequest });
 			document.title = document.title.replace(/\[.+\]/, '');
 			utils.replaceElementsBySelector(".commit-title", "h1");
 		};
