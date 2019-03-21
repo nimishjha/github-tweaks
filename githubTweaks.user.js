@@ -26,6 +26,11 @@
 			return false;
 		};
 
+		const getOne = function(s)
+		{
+			return document.querySelector(s);
+		}
+
 		var del = function(arg)
 		{
 			if(!arg)
@@ -207,18 +212,30 @@
 			}
 		};
 
-		const approvePullRequest = function ()
+		const fixTitle = function ()
+		{
+			if (~location.href.indexOf('/pull/'))
+			{
+				var splits = location.href.split('/');
+				if (splits.length >= 7)
+				{
+					document.title = splits[6] + ": " + document.title.replace(/\[[^\]]+\]/, '');
+				}
+			}
+		};
+
+       		const approvePullRequest = function ()
 		{
 			const openReviewPanel = function ()
 			{
-				const elem = getOne(".js-reviews-toggle");
+				const elem = utils.getOne(".js-reviews-toggle");
 				if (elem)
 					elem.click();
 			};
 
 			const clickApproveCheckbox = function ()
 			{
-				const e = get(".form-checkbox input");
+				const e = utils.get(".form-checkbox input");
 				let i = e.length;
 				while (i--)
 				{
@@ -234,7 +251,7 @@
 
 			const clickSubmitReview = function ()
 			{
-				const e = getOne(".pull-request-review-menu .btn-primary");
+				const e = utils.getOne(".pull-request-review-menu .btn-primary");
 				if (e)
 					e.click();
 			};
@@ -260,6 +277,7 @@
 			addButton({ buttonText: "Toggle template files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEMPLATE_FILE ); } });
 			addButton({ buttonText: "Approve pull request", clickHandler: approvePullRequest });
 			document.title = document.title.replace(/\[.+\]/, '');
+			window.onpopstate = fixTitleDelayed();
 			utils.replaceElementsBySelector(".commit-title", "h1");
 		};
 
