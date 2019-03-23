@@ -15,12 +15,12 @@
 	//				Utils
 	//
 
-	var utils = (function(){
-		var get = function(s)
+	const utils = (function(){
+		const get = function(s)
 		{
 			if(s.indexOf("#") === 0 && !~s.indexOf(" ") && !~s.indexOf("."))
 				return document.querySelector(s);
-			var nodes = document.querySelectorAll(s);
+			const nodes = document.querySelectorAll(s);
 			if(nodes.length)
 				return Array.from(nodes);
 			return false;
@@ -31,7 +31,7 @@
 			return document.querySelector(s);
 		}
 
-		var del = function(arg)
+		const del = function(arg)
 		{
 			if(!arg)
 				return;
@@ -45,42 +45,42 @@
 						del(arg[i]);
 		};
 
-		var replaceElementsBySelector = function(selector, tagName)
+		const replaceElementsBySelector = function(selector, tagName)
 		{
 			if(!(selector && tagName))
 			{
 				selector = prompt("Element to replace (querySelectorAll)");
 				tagName = prompt("Tag to replace with");
 			}
-			var replacement, e, toreplace, i, ii;
-			e = document.querySelectorAll(selector);
+			let i, ii;
+			const e = document.querySelectorAll(selector);
 			if(e.length)
 			{
-				toreplace = [];
+				let toreplace = [];
 				for (i = 0, ii = e.length; i < ii; i++)
 				{
 					toreplace.push(e[i]);
 				}
 				for (i = toreplace.length - 1; i >= 0; i--)
 				{
-					replacement = createElement(tagName, { innerHTML: toreplace[i].innerHTML });
-					toreplace[i].parentNode.replaceChild(replacement, toreplace[i]);
+					toreplace[i].parentNode.replaceChild(createElement(tagName, { innerHTML: toreplace[i].innerHTML }), toreplace[i]);
 				}
 			}
 			else if(e && e.parentNode)
 			{
-				replacement = createElement(tagName, { innerHTML: e.innerHTML });
-				e.parentNode.replaceChild(replacement, e);
+				e.parentNode.replaceChild(createElement(tagName, { innerHTML: e.innerHTML }), e);
 			}
 		};
 
-		var insertStyle = function(str, identifier, important)
+		const insertStyle = function(str, identifier, important)
 		{
 			if(identifier && get("#" + identifier))
 				del("#" + identifier);
 			if(important)
 				str = str.replace(/;/g, " !important;");
-			var head = get("head")[0], style = document.createElement("style"), rules = document.createTextNode(str);
+			const head = get("head")[0];
+			const style = document.createElement("style")
+			const rules = document.createTextNode(str);
 			style.type = "text/css";
 			if(style.styleSheet)
 				style.styleSheet.cssText = rules.nodeValue;
@@ -91,11 +91,11 @@
 			head.appendChild(style);
 		};
 
-		var containsAnyOfTheStrings = function(s, arrStrings)
+		const containsAnyOfTheStrings = function(s, arrStrings)
 		{
 			if(!s || typeof(s) !== "string") return false;
-			var i = arrStrings.length;
-			var found = false;
+			let i = arrStrings.length;
+			let found = false;
 			while(i--)
 			{
 				if(~s.indexOf(arrStrings[i]))
@@ -107,17 +107,17 @@
 			return found;
 		};
 
-		var createElement = function(tag, props)
+		const createElement = function(tag, props)
 		{
-			var elem = document.createElement(tag);
+			const elem = document.createElement(tag);
 			if(props && typeof props === "object")
 			{
-				var key, keys = Object.keys(props);
-				var i = keys.length;
-				var settableProperties = ["id", "className", "textContent", "innerHTML", "value"];
+				const settableProperties = ["id", "className", "textContent", "innerHTML", "value"];
+				const keys = Object.keys(props);
+				let i = keys.length;
 				while(i--)
 				{
-					key = keys[i];
+					let key = keys[i];
 					if(settableProperties.includes(key))
 						elem[key] = props[key];
 					else
@@ -143,58 +143,58 @@
 	//				Github
 	//
 
-	var github = (function(){
-		var CATEGORY = {
+	const github = (function(){
+		const CATEGORY = {
 			ALL_FILES: 'all',
 			TEST_FILE: 'test',
 			TEMPLATE_FILE: 'template',
 			LOGIC_FILE: 'logic',
 		};
 
-		var addButton = function(config)
+		const addButton = function(config)
 		{
-			var e = document.createElement("button");
+			const e = document.createElement("button");
 			e.textContent = config.buttonText;
 			e.className = "btn btn-primary";
 			e.addEventListener("click", config.clickHandler, false);
-			var wrapper = utils.get("#njGithubButtonWrapper");
+			const wrapper = utils.get("#njGithubButtonWrapper");
 			wrapper.appendChild(e);
 		};
 
-		var isTemplateFile = function(s)
+		const isTemplateFile = function(s)
 		{
 			return utils.containsAnyOfTheStrings(s, ["styl", "css", "pug"]);
 		};
 
-		var isLogicFile = function(s)
+		const isLogicFile = function(s)
 		{
 			return utils.containsAnyOfTheStrings(s, [".coffee", ".js", ".jsx"]);
 		};
 
-		var isTestFile = function(s)
+		const isTestFile = function(s)
 		{
 			return utils.containsAnyOfTheStrings(s, ["/test/", "/__test__/", "/unit/", "/demos/", ".snap", ".spec"]);
 		};
 
-		var clickButton = function(button)
+		const clickButton = function(button)
 		{
 			button.click();
 		};
 
-		var collapseAllFiles = function()
+		const collapseAllFiles = function()
 		{
-			var e = utils.get(".file-actions .js-details-target");
-			var i = e.length;
+			const e = utils.get(".file-actions .js-details-target");
+			let i = e.length;
 			while(i--)
 				if(e[i].getAttribute("aria-expanded") === "true")
 					clickButton(e[i]);
 		};
 
-		var toggleFilesByCategory = function(category)
+		const toggleFilesByCategory = function(category)
 		{
-			var e = utils.get(".file-actions .js-details-target");
-			var parent, fileInfo;
-			var i = e.length;
+			const e = utils.get(".file-actions .js-details-target");
+			let parent, fileInfo;
+			let i = e.length;
 			while(i--)
 			{
 				parent = e[i].closest(".file-header");
@@ -216,7 +216,7 @@
 		{
 			if (~location.href.indexOf('/pull/'))
 			{
-				var splits = location.href.split('/');
+				const splits = location.href.split('/');
 				if (splits.length >= 7)
 				{
 					document.title = splits[6] + ": " + document.title.replace(/\[[^\]]+\]/, '');
@@ -261,14 +261,14 @@
 			setTimeout(clickSubmitReview, 500);
 		};
 
-		var main = function()
+		const main = function()
 		{
-			var style = '.sticky-content, .js-sticky h1, .js-sticky h2 { display: none; }' +
+			const style = '.sticky-content, .js-sticky h1, .js-sticky h2 { display: none; }' +
 				'#njGithubButtonWrapper { display: none; padding: 10px; background: #000; }' +
 				'#njGithubButtonWrapper button { margin: 0 10px 0 0; }' +
 				'body.full-width #njGithubButtonWrapper { display: block; }';
 			utils.insertStyle(style, "styleGithub", true);
-			var wrapper = utils.createElement("div", { id: "njGithubButtonWrapper" });
+			const wrapper = utils.createElement("div", { id: "njGithubButtonWrapper" });
 			document.body.insertBefore(wrapper, document.body.firstChild);
 			addButton({ buttonText: "Collapse all files", clickHandler: collapseAllFiles });
 			addButton({ buttonText: "Toggle all files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.ALL_FILES ); } });
@@ -277,7 +277,7 @@
 			addButton({ buttonText: "Toggle template files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEMPLATE_FILE ); } });
 			addButton({ buttonText: "Approve pull request", clickHandler: approvePullRequest });
 			document.title = document.title.replace(/\[.+\]/, '');
-			window.onpopstate = fixTitleDelayed();
+			window.onpopstate = function(){ setTimeout(fixTitle, 200) };
 			utils.replaceElementsBySelector(".commit-title", "h1");
 		};
 
