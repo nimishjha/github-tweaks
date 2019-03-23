@@ -93,7 +93,7 @@
 
 		const containsAnyOfTheStrings = function(s, arrStrings)
 		{
-			if(!s || typeof(s) !== "string") return false;
+			if(!s || typeof s !== "string") return false;
 			let i = arrStrings.length;
 			let found = false;
 			while(i--)
@@ -130,6 +130,7 @@
 
 		return {
 			get: get,
+			getOne: getOne,
 			del: del,
 			replaceElementsBySelector: replaceElementsBySelector,
 			insertStyle: insertStyle,
@@ -277,7 +278,7 @@
 			addButton({ buttonText: "Toggle template files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEMPLATE_FILE ); } });
 			addButton({ buttonText: "Approve pull request", clickHandler: approvePullRequest });
 			document.title = document.title.replace(/\[.+\]/, '');
-			window.onpopstate = function(){ setTimeout(fixTitle, 200) };
+			window.onpopstate = function(){ setTimeout(fixTitle, 200); };
 			utils.replaceElementsBySelector(".commit-title", "h1");
 		};
 
