@@ -29,7 +29,7 @@
 		const getOne = function(s)
 		{
 			return document.querySelector(s);
-		}
+		};
 
 		const del = function(arg)
 		{
@@ -198,7 +198,7 @@
 			let i = e.length;
 			while(i--)
 			{
-				parent = e[i].closest(".file-header");
+				parent = e[i].closest("h4");
 				if(parent)
 				{
 					fileInfo = parent.querySelector(".file-info a");
@@ -269,6 +269,7 @@
 				'#njGithubButtonWrapper button { margin: 0 10px 0 0; }' +
 				'body.full-width #njGithubButtonWrapper { display: block; }';
 			utils.insertStyle(style, "styleGithub", true);
+			utils.replaceElementsBySelector(".sticky-file-header", "h4");
 			const wrapper = utils.createElement("div", { id: "njGithubButtonWrapper" });
 			document.body.insertBefore(wrapper, document.body.firstChild);
 			addButton({ buttonText: "Collapse all files", clickHandler: collapseAllFiles });
@@ -277,7 +278,7 @@
 			addButton({ buttonText: "Toggle test files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEST_FILE ); } });
 			addButton({ buttonText: "Toggle template files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEMPLATE_FILE ); } });
 			addButton({ buttonText: "Approve pull request", clickHandler: approvePullRequest });
-			document.title = document.title.replace(/\[.+\]/, '');
+			fixTitle();
 			window.onpopstate = function(){ setTimeout(fixTitle, 200); };
 			utils.replaceElementsBySelector(".commit-title", "h1");
 		};
