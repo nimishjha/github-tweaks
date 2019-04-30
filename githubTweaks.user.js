@@ -151,6 +151,7 @@
 			TEMPLATE_FILE: 'template',
 			LOGIC_FILE: 'logic',
 		};
+		const EXPAND_TOGGLE_BUTTON_SELECTOR = ".file-info .js-details-target";
 
 		const addButton = function(config)
 		{
@@ -184,7 +185,7 @@
 
 		const collapseAllFiles = function()
 		{
-			const e = utils.get(".file-actions .js-details-target");
+			const e = utils.get(EXPAND_TOGGLE_BUTTON_SELECTOR);
 			let i = e.length;
 			while(i--)
 				if(e[i].getAttribute("aria-expanded") === "true")
@@ -193,7 +194,10 @@
 
 		const toggleFilesByCategory = function(category)
 		{
-			const e = utils.get(".file-actions .js-details-target");
+			utils.replaceElementsBySelector(".sticky-file-header", "h4");
+			utils.replaceElementsBySelector(".file-header", "h4");
+			fixTitle();
+			const e = utils.get(EXPAND_TOGGLE_BUTTON_SELECTOR);
 			let parent, fileInfo;
 			let i = e.length;
 			while(i--)
@@ -215,17 +219,18 @@
 
 		const fixTitle = function ()
 		{
-			if (~location.href.indexOf('/pull/'))
+			if(~location.href.indexOf('/pull/'))
 			{
 				const splits = location.href.split('/');
 				if (splits.length >= 7)
 				{
-					document.title = splits[6] + ": " + document.title.replace(/\[[^\]]+\]/, '');
+					// document.title = splits[6];
+					document.title = document.title.replace(/\[[^\]]+\]/g, '');
 				}
 			}
 		};
 
-       		const approvePullRequest = function ()
+		const approvePullRequest = function ()
 		{
 			const openReviewPanel = function ()
 			{
@@ -270,6 +275,7 @@
 				'body.full-width #njGithubButtonWrapper { display: block; }';
 			utils.insertStyle(style, "styleGithub", true);
 			utils.replaceElementsBySelector(".sticky-file-header", "h4");
+			utils.replaceElementsBySelector(".file-header", "h4");
 			const wrapper = utils.createElement("div", { id: "njGithubButtonWrapper" });
 			document.body.insertBefore(wrapper, document.body.firstChild);
 			addButton({ buttonText: "Collapse all files", clickHandler: collapseAllFiles });
