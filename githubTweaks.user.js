@@ -79,7 +79,7 @@
 			if(important)
 				str = str.replace(/;/g, " !important;");
 			const head = get("head")[0];
-			const style = document.createElement("style")
+			const style = document.createElement("style");
 			const rules = document.createTextNode(str);
 			style.type = "text/css";
 			if(style.styleSheet)
@@ -192,11 +192,16 @@
 					clickButton(e[i]);
 		};
 
-		const toggleFilesByCategory = function(category)
+		const replaceStickyHeaders = function()
 		{
+			console.log('Replacing sticky headers');
 			utils.replaceElementsBySelector(".sticky-file-header", "h4");
 			utils.replaceElementsBySelector(".file-header", "h4");
-			fixTitle();
+		};
+
+		const toggleFilesByCategory = function(category)
+		{
+			init();
 			const e = utils.get(EXPAND_TOGGLE_BUTTON_SELECTOR);
 			let parent, fileInfo;
 			let i = e.length;
@@ -217,7 +222,7 @@
 			}
 		};
 
-		const fixTitle = function ()
+		const init = function ()
 		{
 			if(~location.href.indexOf('/pull/'))
 			{
@@ -228,6 +233,7 @@
 					document.title = document.title.replace(/\[[^\]]+\]/g, '');
 				}
 			}
+			replaceStickyHeaders();
 		};
 
 		const approvePullRequest = function ()
@@ -284,8 +290,12 @@
 			addButton({ buttonText: "Toggle test files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEST_FILE ); } });
 			addButton({ buttonText: "Toggle template files", clickHandler: function(){ toggleFilesByCategory( CATEGORY.TEMPLATE_FILE ); } });
 			addButton({ buttonText: "Approve pull request", clickHandler: approvePullRequest });
-			fixTitle();
-			window.onpopstate = function(){ setTimeout(fixTitle, 200); };
+			init();
+			setTimeout(init, 500);
+			setTimeout(init, 5000);
+			window.onpopstate = function(){ console.log('onpopstate'); setTimeout(init, 200); };
+			window.onbeforeunload = function(){ console.log('onbeforeunload'); setTimeout(init, 200); };
+			window.onunload = function(){ console.log('onunload'); setTimeout(init, 200); };
 			utils.replaceElementsBySelector(".commit-title", "h1");
 		};
 
